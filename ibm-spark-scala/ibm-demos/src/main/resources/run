@@ -1,0 +1,6 @@
+/Users/arunwagle/Bluemix/Projects/Personal/ibm-spark-scala/ibm-demos/src/main/resources/spark-submit.sh \
+--vcap /Users/arunwagle/Bluemix/Projects/Personal/ibm-spark-scala/ibm-demos/src/main/resources/vcap.json \
+--deploy-mode cluster \
+--class com.ibm.finance.cfpb.cc.driver.ConsumerComplaintsTSDriver \
+--master https://spark.bluemix.net \
+/Users/arunwagle/Bluemix/Projects/Personal/ibm-spark-scala/ibm-demos/target/ibm-demos-1.0-SNAPSHOT-jar-with-dependencies.jar file:///Users/arunwagle/Bluemix/Projects/Personal/ibm-spark-scala/ibm-demos/src/main/resources/spark-submit_20160305165113.log

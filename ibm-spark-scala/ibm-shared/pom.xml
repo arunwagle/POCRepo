@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ibm</groupId>
+    <artifactId>ibm-shared</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+        <properties>
+            <!-- PCH versions -->
+            <version.pch>1.0-SNAPSHOT</version.pch>
+
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <!-- java -->
+            <version.java>1.7</version.java>
+            <version.plugin.maven.compiler>3.1</version.plugin.maven.compiler>
+            <!-- tomcat -->
+            <version.plugin.tomcat7>2.2</version.plugin.tomcat7>
+
+            <!-- Servlet API -->
+            <version.servlet.api>3.0.1</version.servlet.api>
+
+            <!-- Spring -->
+            <version.spring.framework>4.2.3.RELEASE</version.spring.framework>
+            <version.spring.integration>4.2.3.RELEASE</version.spring.integration>
+
+            <version.spring.security>3.2.1.RELEASE</version.spring.security>
+
+            <!-- Testing -->
+            <version.plugin.surefire>2.16</version.plugin.surefire>
+            <version.plugin.failsafe>2.6</version.plugin.failsafe>
+
+            <!-- JUnit Version -->
+            <version.junit>4.11</version.junit>
+            <!-- Mockito Version -->
+            <version.mockito>1.10.19</version.mockito>
+
+            <!-- Power Mock -->
+            <version.mockito.powermock>1.6.4</version.mockito.powermock>
+
+            <!-- Google Dependencies Version -->
+            <version.guava>14.0.1</version.guava>
+
+            <!--  Jackson dependencies -->
+            <version.jackson.databinding>2.4.4</version.jackson.databinding>
+            <version.jackson.annotations>2.4.4</version.jackson.annotations>
+            <version.jackson.core>2.4.4</version.jackson.core>
+
+            <!-- Logging Version -->
+            <version.slf4j>1.7.10</version.slf4j>
+
+            <!-- Derby -->
+            <version.derby>10.10.1.1</version.derby>
+
+            <!-- Apache Versions -->
+            <version.apache.commons.io>2.4</version.apache.commons.io>
+            <version.apache.httpcomponents>4.3.5</version.apache.httpcomponents>
+
+            <version16.spark.core>1.6.2</version16.spark.core>
+
+            <version.spark.core>2.0.0</version.spark.core>
+            <version.spark.streaming>2.0.0</version.spark.streaming>
+            <version.spark.kafka.streaming>2.0.0</version.spark.kafka.streaming>
+            <version.kafka.spark>0.8.2.2</version.kafka.spark>
+            <version.kafka>0.9.0.0</version.kafka>
+
+            <version.joda-time>2.7</version.joda-time>
+            <version.apache.commons-lang3>3.3</version.apache.commons-lang3>
+
+            <!-- HBase Version -->
+            <hbase.version>1.1.2</hbase.version>
+
+            <!-- Hibernate Validator -->
+            <org.hibernate.validator.version>4.2.0.Final</org.hibernate.validator.version>
+
+            <scala.version>2.11.8</scala.version>
+
+            <mapr.drill.version>1.3.0</mapr.drill.version>
+
+            <swagger2.version>2.4.0</swagger2.version>
+
+            <hazelcast.imdg.version>3.6.2</hazelcast.imdg.version>
+
+            <!--
+            <scaleout.imdg.version>5.4</scaleout.imdg.version>
+            -->
+            <com.googlecode.concurrentlinkedhashmap.version>1.4</com.googlecode.concurrentlinkedhashmap.version>
+
+            <commons.cli.version>1.2</commons.cli.version>
+
+            <commons.configuration.version>1.6</commons.configuration.version>
+
+            <commons.logging.version>1.0.4</commons.logging.version>
+
+            <log4j.version>1.2.16</log4j.version>
+        </properties>
+
+        <!-- Dependency Configuration -->
+        <dependencyManagement>
+            <dependencies>
+                <!-- PCH dependencies -->
+
+
+
+                <!-- test -->
+                <dependency>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                    <version>${version.junit}</version>
+                </dependency>
+
+
+                <dependency>
+                    <groupId>org.apache.spark</groupId>
+                    <artifactId>spark-core_2.10</artifactId>
+                    <version>${version.spark.core}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.spark</groupId>
+                    <artifactId>spark-streaming_2.10</artifactId>
+                    <version>${version.spark.streaming}</version>
+                </dependency>
+
+
+
+                <!-- Kafka dependency -->
+                <dependency>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka_2.10</artifactId>
+                    <version>${version.kafka}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.apache.spark</groupId>
+                    <artifactId>spark-streaming-kafka_2.10</artifactId>
+                    <version>${version.spark.kafka.streaming}</version>
+                </dependency>
+
+                <!-- Scala Dependencies-->
+                <dependency>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-compiler</artifactId>
+                    <version>${scala.version}</version>
+                </dependency>
+
+            </dependencies>
+        </dependencyManagement>
+
+
+
+
+        <!-- Repositories -->
+        <repositories>
+            <repository>
+                <id>central</id>
+                <name>Maven Repository Switchboard</name>
+                <layout>default</layout>
+                <url>http://repo2.maven.org/maven2</url>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+            </repository>
+
+            <repository>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+                <id>public-jboss</id>
+                <name>JBoss Repository</name>
+                <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+            </repository>
+
+            <repository>
+                <id>javageomodel-repo</id>
+                <url>svn:https://javageomodel.googlecode.com/svn/repository/</url>
+            </repository>
+
+            <repository>
+                <id>cloudera</id>
+                <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+            </repository>
+
+            <repository>
+                <id>mapr-releases</id>
+                <url>http://repository.mapr.com/maven/</url>
+                <snapshots><enabled>false</enabled></snapshots>
+                <releases><enabled>true</enabled></releases>
+            </repository>
+
+            <repository>
+                <id>scala-tools.org</id>
+                <name>Scala-tools Maven2 Repository</name>
+                <url>http://scala-tools.org/repo-releases</url>
+            </repository>
+        </repositories>
+
+        <pluginRepositories>
+            <pluginRepository>
+                <id>scala-tools.org</id>
+                <name>Scala-tools Maven2 Repository</name>
+                <url>http://scala-tools.org/repo-releases</url>
+            </pluginRepository>
+        </pluginRepositories>
+
+
+
+    </project>

@@ -1,0 +1,37 @@
+%Addjar http://central.maven.org/maven2/org/apache/kafka/kafka-clients/0.9.0.0/kafka-clients-0.9.0.0.jar
+%Addjar http://central.maven.org/maven2/org/apache/kafka/kafka_2.10/0.9.0.0/kafka_2.10-0.9.0.0.jar
+%Addjar http://central.maven.org/maven2/org/apache/kafka/kafka-log4j-appender/0.9.0.0/kafka-log4j-appender-0.9.0.0.jar
+%Addjar https://github.com/ibm-messaging/message-hub-samples/raw/master/java/message-hub-login-library/messagehub.login-1.0.0.jar
+%Addjar https://github.com/ibm-messaging/iot-messgehub-spark-samples/releases/download/v0.1/streaming-kafka.jar
+
+
+import org.apache.spark.streaming.Duration
+import org.apache.spark.streaming.Seconds
+import org.apache.spark.streaming.StreamingContext
+import com.ibm.cds.spark.samples.config.MessageHubConfig
+import com.ibm.cds.spark.samples.dstream.KafkaStreaming.KafkaStreamingContextAdapter
+import org.apache.kafka.common.serialization.Deserializer
+import org.apache.kafka.common.serialization.StringDeserializer
+
+val kafkaProps = new MessageHubConfig
+
+kafkaProps.setConfig("bootstrap.servers", "kafka01-prod01.messagehub.services.us-south.bluemix.net:9093,kafka02-prod01.messagehub.services.us-south.bluemix.net:9093,kafka03-prod01.messagehub.services.us-south.bluemix.net:9093,kafka04-prod01.messagehub.services.us-south.bluemix.net:9093,kafka05-prod01.messagehub.services.us-south.bluemix.net:9093")
+kafkaProps.setConfig("kafka.user.name","J9X7zTIZUdxzqieY")
+kafkaProps.setConfig("kafka.user.password", "5abTDPmF0yJBRP0Iv4eP4FyXx75Is9a4")
+kafkaProps.setConfig("kafka.topic","mytopic")
+kafkaProps.setConfig("api_key","J9X7zTIZUdxzqieY5abTDPmF0yJBRP0Iv4eP4FyXx75Is9a4")
+kafkaProps.setConfig("kafka_rest_url", "https://kafka-rest-prod01.messagehub.services.us-south.bluemix.net:443")
+
+kafkaProps.createConfiguration()
+
+
+val ssc = new StreamingContext( sc, Seconds(2) )
+
+ val stream = ssc.createKafkaStream[String, String, StringDeserializer, StringDeserializer](
+ kafkaProps,
+ List(kafkaProps.getConfig("kafka.topic"))
+ );
+
+stream.print()
+ssc.start()
+ssc.awaitTermination()

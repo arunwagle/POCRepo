@@ -1,0 +1,69 @@
+%Addjar http://central.maven.org/maven2/org/mongodb/spark/mongo-spark-connector_2.10/1.0.0/mongo-spark-connector_2.10-1.0.0.jar
+
+
+import com.mongodb.spark.MongoSpark
+import com.mongodb.spark.config.{ReadConfig, WriteConfig}
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.{SQLContext, SaveMode}
+import play.api.libs.json.{Json, Writes}
+import org.apache.spark.sql.functions.{date_format, from_unixtime, from_utc_timestamp, to_date, to_utc_timestamp, unix_timestamp}
+import com.mongodb.spark.sql._
+
+val MONGODB_URI: String = args.headOption.getOrElse("mongodb://cfpbAdmin:cfpbAdmin@aws-us-east-1-portal.19.dblayer.com:11490/CFPB.consumer_complaints")
+
+    val MONGODB_OUTPUT_URI: String = args.headOption.getOrElse("mongodb://cfpbAdmin:cfpbAdmin@aws-us-east-1-portal.19.dblayer.com:11490/CFPB.monthly_consumer_complaints")
+
+    val MONGODB_DB_URI: String = args.headOption.getOrElse("mongodb://cfpbAdmin:cfpbAdmin@aws-us-east-1-portal.19.dblayer.com:11490/CFPB")
+
+    @transient val sparkConf = new SparkConf()
+      .setAppName("ConsumerComplaintsTSDriver")
+      .setMaster("local[8]")
+//      .set("spark.mongodb.input.uri", uri)
+      .set("spark.mongodb.output.uri", MONGODB_OUTPUT_URI)
+//      .set("spark.mongodb.output.database", MONGODB_DB_URI)
+
+
+
+    val sc = new SparkContext(sparkConf)
+
+    // create a SQL context to read data
+    val sqlContext = SQLContext.getOrCreate(sc)
+
+    val readConfig: ReadConfig = ReadConfig(Map("uri"-> MONGODB_URI))
+
+    val consumerComplaintsRawDF = MongoSpark.load(sc, readConfig).toDF[ConsumerComplaints]()
+    consumerComplaintsRawDF.registerTempTable("consumer_complaints_tmp")
+
+    consumerComplaintsRawDF.printSchema()
+
+
+    val consumerComplaintsFilteredDF = sqlContext.sql("SELECT complaint_id, to_date(from_unixtime(unix_timestamp(a.date_received, 'MM/dd/yy'))) as received_date" +
+      ",issue, product, state, company, year(to_date(from_unixtime(unix_timestamp(a.date_received, 'MM/dd/yy')))) as year" +
+      ", month(to_date(from_unixtime(unix_timestamp(a.date_received, 'MM/dd/yy')))) as month" +
+      ", day(to_date(from_unixtime(unix_timestamp(a.date_received, 'MM/dd/yy')))) as day  " +
+      " FROM consumer_complaints_tmp a ")
+
+
+    import sqlContext.implicits._
+    val consumerComplaintsDS = consumerComplaintsFilteredDF.toDF().as[ConsumerComplaintsFiltered]
+
+    val monthlyComplaintsDS = consumerComplaintsDS.map(r => {
+
+      val complaintData : ComplaintData = new  ComplaintData(r.day, r.product, r.issue, r.company, r.state)
+      // not required
+      val id = r.complaint_id + ":" + r.received_date
+
+      val monthlyComplaints: MonthlyComplaints = new MonthlyComplaints(r.complaint_id, r.year, r.month, r.day, r.received_date, r.product, r.issue, r.company, r.state)
+
+      monthlyComplaints
+
+    })
+
+
+
+    monthlyComplaintsDS.show(50)
+
+
+    // Save to DB
+    val writeConfig = WriteConfig(Map("collection" -> "monthly_complaints_test", "writeConcern.w" -> "majority"), Some(WriteConfig(sc)))
+    MongoSpark.save(monthlyComplaintsDS.toDF().write.mode(SaveMode.Ignore), writeConfig)

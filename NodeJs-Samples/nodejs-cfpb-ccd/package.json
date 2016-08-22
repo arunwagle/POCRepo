@@ -1,0 +1,28 @@
+{
+  "name": "consumer_complaints_analytics",
+  "version": "1.0.0",
+  "description": "Analytics for database of consumer credit card complaints received by the Consumer Financial Protection Bureau, with tools to search and visualize complaints based on zip code, response, volume, and issue.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Analytics",
+    "Spark",
+    "NodeJS",
+    "IBM",
+    "Bluemix",
+    "Compose",
+    "MongoDB"
+  ],
+  "author": "Arun Wagle",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "method-override": "^2.3.6",
+    "mongoose": "^4.5.9",
+    "multer": "^1.2.0"
+  }
+}
